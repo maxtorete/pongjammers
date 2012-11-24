@@ -3,11 +3,15 @@ ig.module(
 )
 .requires(
 	'impact.game',
+	'impact.font',
 	'game.levels.grassfield'
 )
 .defines(function(){
 
 MyGame = ig.Game.extend({
+	
+	// Load a font
+	font: new ig.Font( 'media/04b03.font.png' ),
 
 	init: function() {
 		this.loadLevel(LevelGrassfield);
@@ -27,6 +31,23 @@ MyGame = ig.Game.extend({
 		this.parent();
 
 		// Add your own drawing code here
+		var puck = ig.game.getEntitiesByType(EntityPuck)[0];
+		var winnerText = '';
+		
+		if (puck.pos.x + 8 < 0) {
+			winnerText = 'Machine player wins!';
+		}
+		else if (puck.pos.x > 320) {
+			winnerText = 'Human player wins!';
+		}
+
+		if (winnerText) {
+			var x = ig.system.width/2,
+			y = ig.system.height/2;
+
+			this.font.draw(winnerText + '\nVisit http://spartup.es', x, y, ig.Font.ALIGN.CENTER);
+			ig.system.stopRunLoop();
+		}
 	}
 });
 
